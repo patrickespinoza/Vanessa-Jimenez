@@ -2,20 +2,49 @@ import React from "react";
 import { motion } from "framer-motion";
 import {
   CalendarDays,
+  Church,
   Clock3,
-  Crown,
   MapPin,
+  PartyPopper,
   Sparkles,
 } from "lucide-react";
 
 const Celebracion = ({
-  titulo = "Celebración",
-  fecha = "11 Julio 2027",
-  hora = "4:30 PM",
-  lugar = "Salón Event Center",
-  direccion = "C. 5 Pte. 400, Libertad, Heroica Puebla de Zaragoza, Pue.",
-  ubicacion = "https://maps.app.goo.gl/TsSDUBKAractwi8F8",
+  fecha = "12 Septiembre 2026",
+
+  parroquia = {
+    nombre: "Parroquia de Santa María de La Natividad",
+    hora: "15:00",
+    direccion: "Miguel Alemán 1, Sta María Xonacatepec, 72940 Santa María Xonacatepec, Pue.",
+    ubicacion: "https://maps.app.goo.gl/9cs5Ax1B6w1b46Db8",
+  },
+
+  salon = {
+    nombre: "Salón Social",
+    hora: "17:00",
+    direccion: "Av. San Pedro 14, Sta María Xonacatepec, 72940 Santa María Xonacatepec, Pue.",
+    ubicacion: "https://maps.app.goo.gl/Q2Qk3nVEXaYELHY36",
+  },
 }) => {
+  const eventos = [
+    {
+      tipo: "Ceremonia",
+      nombre: parroquia.nombre,
+      hora: parroquia.hora,
+      direccion: parroquia.direccion,
+      ubicacion: parroquia.ubicacion,
+      Icono: Church,
+    },
+    {
+      tipo: "Recepción",
+      nombre: salon.nombre,
+      hora: salon.hora,
+      direccion: salon.direccion,
+      ubicacion: salon.ubicacion,
+      Icono: PartyPopper,
+    },
+  ];
+
   return (
     <section
       className="
@@ -24,36 +53,50 @@ const Celebracion = ({
         isolate
         w-full
         overflow-hidden
-        bg-gradient-to-b
-        from-[#F5EBDD]
-        via-[#FFFFFF]
-        to-[#E8DFF2]
-        px-5
+        bg-[#F8FAFC]
+        px-4
         py-20
-        sm:px-8
-        sm:py-28
+        sm:px-6
+        sm:py-24
+        md:py-28
       "
     >
-      {/* DECORACIÓN SUPERIOR IZQUIERDA */}
+      {/* =====================================================
+          FONDO
+      ====================================================== */}
+
       <div
         className="
-          celebracionXV__luz-superior
+          pointer-events-none
+          absolute
+          inset-0
+          bg-gradient-to-b
+          from-white
+          via-[#F7F9FB]
+          to-[#EEF2F5]
+        "
+      />
+
+      {/* =====================================================
+          LUCES / ACUARELAS
+      ====================================================== */}
+
+      <div
+        className="
           pointer-events-none
           absolute
           -left-28
           -top-28
-          h-[360px]
-          w-[360px]
+          h-[380px]
+          w-[380px]
           rounded-full
-          bg-[#C8B6E2]/45
-          blur-[100px]
+          bg-[#A9B9C8]/30
+          blur-[95px]
         "
       />
 
-      {/* DECORACIÓN INFERIOR DERECHA */}
       <div
         className="
-          celebracionXV__luz-inferior
           pointer-events-none
           absolute
           -bottom-32
@@ -61,226 +104,125 @@ const Celebracion = ({
           h-[390px]
           w-[390px]
           rounded-full
-          bg-[#5D4E8C]/20
+          bg-[#5F7892]/15
           blur-[110px]
         "
       />
 
-      {/* CÍRCULOS DECORATIVOS */}
-      <div
-        className="
-          celebracionXV__circulo-uno
-          pointer-events-none
-          absolute
-          left-8
-          top-28
-          h-32
-          w-32
-          rounded-full
-          border
-          border-[#5D4E8C]/10
-        "
-      />
+      {/* =====================================================
+          DESTELLOS
+      ====================================================== */}
 
-      <div
-        className="
-          celebracionXV__circulo-dos
-          pointer-events-none
-          absolute
-          bottom-20
-          right-10
-          h-44
-          w-44
-          rounded-full
-          border
-          border-[#5D4E8C]/10
-        "
-      />
-
-      {/* DESTELLOS */}
       <motion.div
         className="
-          celebracionXV__destello-izquierdo
+          pointer-events-none
           absolute
           left-[7%]
           top-20
-          text-[#5D4E8C]/45
+          text-[#5F7892]/35
         "
         animate={{
-          opacity: [0.25, 1, 0.25],
-          scale: [0.8, 1.15, 0.8],
-          rotate: [0, 20, 0],
+          opacity: [0.2, 0.8, 0.2],
+          scale: [0.8, 1.1, 0.8],
+          rotate: [0, 18, 0],
         }}
         transition={{
-          duration: 3.2,
+          duration: 3.4,
           repeat: Infinity,
           ease: "easeInOut",
         }}
       >
-        <Sparkles size={30} strokeWidth={1.2} />
+        <Sparkles
+          size={28}
+          strokeWidth={1.2}
+        />
       </motion.div>
 
       <motion.div
         className="
-          celebracionXV__destello-derecho
+          pointer-events-none
           absolute
+          bottom-[14%]
           right-[8%]
-          top-1/3
-          text-[#C8B6E2]
+          text-[#A9B9C8]/40
         "
         animate={{
-          opacity: [0.2, 0.9, 0.2],
-          scale: [0.7, 1.1, 0.7],
-          rotate: [0, -20, 0],
+          opacity: [0.2, 0.8, 0.2],
+          scale: [0.75, 1.15, 0.75],
         }}
         transition={{
           duration: 3.8,
           repeat: Infinity,
           ease: "easeInOut",
-          delay: 0.5,
         }}
       >
-        <Sparkles size={38} strokeWidth={1.1} />
+        <Sparkles
+          size={34}
+          strokeWidth={1.1}
+        />
       </motion.div>
 
-      <motion.div
+      {/* =====================================================
+          CONTENIDO
+      ====================================================== */}
+
+      <div
         className="
-          celebracionXV__tarjeta-principal
           relative
           z-10
           mx-auto
-          max-w-5xl
-          overflow-hidden
-          rounded-[2.5rem]
-          border
-          border-white/80
-          bg-white/70
-          px-5
-          py-14
-          text-center
-          shadow-[0_30px_90px_rgba(93,78,140,0.18)]
-          backdrop-blur-xl
-          sm:px-10
-          sm:py-16
-          md:px-14
+          max-w-6xl
         "
-        initial={{
-          opacity: 0,
-          y: 45,
-          scale: 0.97,
-        }}
-        whileInView={{
-          opacity: 1,
-          y: 0,
-          scale: 1,
-        }}
-        transition={{
-          duration: 0.9,
-          ease: [0.22, 1, 0.36, 1],
-        }}
-        viewport={{
-          once: true,
-          amount: 0.25,
-        }}
       >
-        {/* BRILLO DE TARJETA */}
-        <div
+        {/* =================================================
+            ENCABEZADO
+        ================================================== */}
+
+        <motion.div
           className="
-            celebracionXV__tarjeta-brillo-superior
-            pointer-events-none
-            absolute
-            -right-20
-            -top-24
-            h-64
-            w-64
-            rounded-full
-            bg-[#C8B6E2]/35
-            blur-3xl
+            mx-auto
+            max-w-3xl
+            text-center
           "
-        />
-
-        <div
-          className="
-            celebracionXV__tarjeta-brillo-inferior
-            pointer-events-none
-            absolute
-            -bottom-24
-            -left-20
-            h-64
-            w-64
-            rounded-full
-            bg-[#F5EBDD]/80
-            blur-3xl
-          "
-        />
-
-        {/* ENCABEZADO */}
-        <div className="celebracionXV__encabezado relative">
-          <motion.div
-            className="
-              celebracionXV__corona
-              mx-auto
-              mb-5
-              flex
-              h-16
-              w-16
-              items-center
-              justify-center
-              rounded-full
-              border
-              border-[#5D4E8C]/15
-              bg-[#F5EBDD]/80
-              text-[#5D4E8C]
-              shadow-[0_12px_30px_rgba(93,78,140,0.14)]
-            "
-            animate={{
-              y: [0, -5, 0],
-              rotate: [0, 2, 0, -2, 0],
-            }}
-            transition={{
-              duration: 4,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
-          >
-            <Crown size={31} strokeWidth={1.35} />
-          </motion.div>
-
-          <p
-            className="
-              celebracionXV__etiqueta
-              mb-4
-              font-playfair
-              text-xs
-              font-semibold
-              uppercase
-              tracking-[0.38em]
-              text-[#5D4E8C]/65
-              sm:text-sm
-            "
-          >
-            Un día inolvidable
-          </p>
-
+          initial={{
+            opacity: 0,
+            y: 30,
+          }}
+          whileInView={{
+            opacity: 1,
+            y: 0,
+          }}
+          transition={{
+            duration: 0.85,
+            ease: "easeOut",
+          }}
+          viewport={{
+            once: true,
+            amount: 0.3,
+          }}
+        >
           <h2
             className="
-              celebracionXV__titulo
-              font-cursiveDancing
-              text-5xl
-              leading-none
-              text-[#5D4E8C]
-              sm:text-6xl
-              md:text-7xl
+              mb-3
+              font-playfair
+              text-[20px]
+              uppercase
+              tracking-[0.45em]
+              text-[#5F7892]
+              sm:text-2xl
             "
           >
-            {titulo}
+            Celebración
           </h2>
+
+
+
+          {/* SEPARADOR */}
 
           <div
             className="
-              celebracionXV__separador
               mx-auto
-              my-8
+              my-6
               flex
               items-center
               justify-center
@@ -289,222 +231,80 @@ const Celebracion = ({
           >
             <span
               className="
-                celebracionXV__linea-izquierda
                 h-px
                 w-14
                 bg-gradient-to-r
                 from-transparent
-                to-[#5D4E8C]/40
-                sm:w-24
+                to-[#5F7892]/45
               "
             />
 
             <Sparkles
-              size={19}
+              size={15}
               strokeWidth={1.3}
-              className="text-[#5D4E8C]"
+              className="text-[#5F7892]"
             />
 
             <span
               className="
-                celebracionXV__linea-derecha
                 h-px
                 w-14
                 bg-gradient-to-l
                 from-transparent
-                to-[#5D4E8C]/40
-                sm:w-24
+                to-[#5F7892]/45
               "
             />
           </div>
-        </div>
 
-        {/* FECHA Y HORA */}
-        <div
-          className="
-            celebracionXV__datos
-            relative
-            mx-auto
-            grid
-            max-w-3xl
-            grid-cols-1
-            gap-5
-            sm:grid-cols-2
-          "
-        >
-          <motion.div
+          <p
             className="
-              celebracionXV__fecha
-              group
-              relative
-              overflow-hidden
-              rounded-[1.8rem]
-              border
-              border-[#C8B6E2]/50
-              bg-gradient-to-br
-              from-[#5D4E8C]
-              to-[#7563A5]
-              px-6
-              py-7
-              text-white
-              shadow-[0_16px_40px_rgba(93,78,140,0.25)]
+              mx-auto
+              max-w-xl
+              font-playfair
+              text-[15px]
+              leading-[1.8]
+              text-[#17191C]/65
+              sm:text-base
             "
-            whileHover={{
-              y: -6,
-              scale: 1.02,
-            }}
-            transition={{
-              duration: 0.3,
-            }}
           >
-            <div
-              className="
-                celebracionXV__fecha-brillo
-                pointer-events-none
-                absolute
-                -right-8
-                -top-8
-                h-28
-                w-28
-                rounded-full
-                bg-white/15
-                blur-2xl
-              "
-            />
+            Será un honor compartir contigo cada momento
+            de este día tan especial.
+          </p>
+        </motion.div>
 
-            <CalendarDays
-              size={28}
-              strokeWidth={1.4}
-              className="mx-auto mb-4 text-[#F5EBDD]"
-            />
+        {/* =================================================
+            FECHA PRINCIPAL
+        ================================================== */}
 
-            <p
-              className="
-                celebracionXV__fecha-etiqueta
-                mb-2
-                font-playfair
-                text-xs
-                uppercase
-                tracking-[0.25em]
-                text-white/65
-              "
-            >
-              Fecha
-            </p>
-
-            <p
-              className="
-                celebracionXV__fecha-valor
-                font-playfair
-                text-2xl
-                sm:text-3xl
-              "
-            >
-              {fecha}
-            </p>
-          </motion.div>
-
-          <motion.div
-            className="
-              celebracionXV__hora
-              group
-              relative
-              overflow-hidden
-              rounded-[1.8rem]
-              border
-              border-[#C8B6E2]/50
-              bg-gradient-to-br
-              from-[#5D4E8C]
-              to-[#7563A5]
-              px-6
-              py-7
-              text-white
-              shadow-[0_16px_40px_rgba(93,78,140,0.25)]
-            "
-            whileHover={{
-              y: -6,
-              scale: 1.02,
-            }}
-            transition={{
-              duration: 0.3,
-            }}
-          >
-            <div
-              className="
-                celebracionXV__hora-brillo
-                pointer-events-none
-                absolute
-                -right-8
-                -top-8
-                h-28
-                w-28
-                rounded-full
-                bg-white/15
-                blur-2xl
-              "
-            />
-
-            <Clock3
-              size={28}
-              strokeWidth={1.4}
-              className="mx-auto mb-4 text-[#F5EBDD]"
-            />
-
-            <p
-              className="
-                celebracionXV__hora-etiqueta
-                mb-2
-                font-playfair
-                text-xs
-                uppercase
-                tracking-[0.25em]
-                text-white/65
-              "
-            >
-              Hora
-            </p>
-
-            <p
-              className="
-                celebracionXV__hora-valor
-                font-playfair
-                text-2xl
-                sm:text-3xl
-              "
-            >
-              {hora}
-            </p>
-          </motion.div>
-        </div>
-
-        {/* UBICACIÓN */}
         <motion.div
           className="
-            celebracionXV__ubicacion
-            relative
             mx-auto
             mt-10
-            max-w-3xl
-            rounded-[2rem]
+            flex
+            max-w-md
+            items-center
+            justify-center
+            gap-4
+            rounded-full
             border
-            border-[#5D4E8C]/10
-            bg-[#F5EBDD]/65
-            px-5
-            py-9
-            shadow-[0_14px_35px_rgba(93,78,140,0.08)]
-            sm:px-9
+            border-[#C8CDD2]
+            bg-white/85
+            px-6
+            py-4
+            shadow-[0_10px_30px_rgba(67,93,118,0.09)]
+            backdrop-blur-md
           "
           initial={{
             opacity: 0,
-            y: 25,
+            scale: 0.95,
           }}
           whileInView={{
             opacity: 1,
-            y: 0,
+            scale: 1,
           }}
           transition={{
             duration: 0.7,
-            delay: 0.2,
+            delay: 0.1,
           }}
           viewport={{
             once: true,
@@ -512,105 +312,357 @@ const Celebracion = ({
         >
           <div
             className="
-              celebracionXV__ubicacion-icono
-              mx-auto
-              mb-5
               flex
-              h-14
-              w-14
+              h-10
+              w-10
+              shrink-0
               items-center
               justify-center
               rounded-full
-              bg-[#C8B6E2]/40
-              text-[#5D4E8C]
+              border
+              border-[#A9B9C8]/55
+              bg-[#EEF2F5]
+              text-[#5F7892]
             "
           >
-            <MapPin size={27} strokeWidth={1.5} />
+            <CalendarDays
+              size={20}
+              strokeWidth={1.4}
+            />
           </div>
 
-          <p
-            className="
-              celebracionXV__ubicacion-titulo
-              font-cursiveDancing
-              text-4xl
-              text-[#5D4E8C]
-              sm:text-5xl
-            "
-          >
-            Lugar de la celebración
-          </p>
+          <div className="text-left">
+            <p
+              className="
+                font-playfair
+                text-[9px]
+                uppercase
+                tracking-[0.3em]
+                text-[#5F7892]/70
+              "
+            >
+              Fecha
+            </p>
 
-          <h3
-            className="
-              celebracionXV__lugar
-              mt-4
-              font-playfair
-              text-2xl
-              text-[#2E2E2E]
-              sm:text-3xl
-            "
-          >
-            {lugar}
-          </h3>
-
-          <p
-            className="
-              celebracionXV__direccion
-              mx-auto
-              mt-4
-              max-w-xl
-              font-playfair
-              text-base
-              leading-relaxed
-              text-[#2E2E2E]/70
-              sm:text-lg
-            "
-          >
-            {direccion}
-          </p>
+            <p
+              className="
+                mt-1
+                font-playfair
+                text-base
+                text-[#17191C]
+                sm:text-lg
+              "
+            >
+              {fecha}
+            </p>
+          </div>
         </motion.div>
 
-        {/* BOTÓN */}
-        <motion.a
-          href={ubicacion}
-          target="_blank"
-          rel="noopener noreferrer"
+        {/* =================================================
+            EVENTOS
+        ================================================== */}
+
+        <div
           className="
-            celebracionXV__boton
-            relative
-            mt-9
-            inline-flex
+            mx-auto
+            mt-12
+            grid
+            max-w-5xl
+            grid-cols-1
+            gap-6
+            md:grid-cols-2
+          "
+        >
+          {eventos.map(
+            (
+              {
+                tipo,
+                nombre,
+                hora,
+                direccion,
+                ubicacion,
+                Icono,
+              },
+              indice
+            ) => (
+              <motion.article
+                key={tipo}
+                className="
+                  group
+                  relative
+                  overflow-hidden
+                  rounded-[1.8rem]
+                  border
+                  border-[#C8CDD2]/85
+                  bg-white/90
+                  px-5
+                  py-8
+                  text-center
+                  shadow-[0_16px_45px_rgba(67,93,118,0.10)]
+                  backdrop-blur-xl
+                  sm:px-7
+                  sm:py-9
+                "
+                initial={{
+                  opacity: 0,
+                  y: 35,
+                }}
+                whileInView={{
+                  opacity: 1,
+                  y: 0,
+                }}
+                transition={{
+                  duration: 0.75,
+                  delay: indice * 0.12,
+                  ease: "easeOut",
+                }}
+                viewport={{
+                  once: true,
+                  amount: 0.25,
+                }}
+                whileHover={{
+                  y: -5,
+                }}
+              >
+                {/* BRILLO */}
+
+                <div
+                  className="
+                    pointer-events-none
+                    absolute
+                    -right-14
+                    -top-14
+                    h-40
+                    w-40
+                    rounded-full
+                    bg-[#A9B9C8]/16
+                    blur-3xl
+                  "
+                />
+
+                {/* =================================================
+                    TIPO
+                ================================================== */}
+
+                <p
+                  className="
+                    relative
+                    font-playfair
+                    text-[10px]
+                    uppercase
+                    tracking-[0.35em]
+                    text-[#5F7892]/70
+                  "
+                >
+                  {tipo}
+                </p>
+
+                {/* =================================================
+                    ICONO PRINCIPAL
+                ================================================== */}
+
+                <div
+                  className="
+                    relative
+                    mx-auto
+                    mt-5
+                    flex
+                    h-16
+                    w-16
+                    items-center
+                    justify-center
+                    rounded-full
+                    border
+                    border-[#A9B9C8]/65
+                    bg-[#F5F7F9]
+                    text-[#5F7892]
+                    shadow-[0_8px_24px_rgba(67,93,118,0.10)]
+                  "
+                >
+                  <Icono
+                    size={29}
+                    strokeWidth={1.25}
+                  />
+                </div>
+
+                {/* =================================================
+                    NOMBRE
+                ================================================== */}
+
+                <h3
+                  className="
+                    relative
+                    mt-5
+                    font-playfair
+                    text-2xl
+                    text-[#17191C]
+                    sm:text-3xl
+                  "
+                >
+                  {nombre}
+                </h3>
+
+                {/* =================================================
+                    SEPARADOR
+                ================================================== */}
+
+                <div
+                  className="
+                    relative
+                    mx-auto
+                    my-5
+                    h-px
+                    w-16
+                    bg-gradient-to-r
+                    from-transparent
+                    via-[#5F7892]/40
+                    to-transparent
+                  "
+                />
+
+                {/* =================================================
+                    HORA
+                ================================================== */}
+
+                <div
+                  className="
+                    relative
+                    flex
+                    items-center
+                    justify-center
+                    gap-2
+                  "
+                >
+                  <Clock3
+                    size={17}
+                    strokeWidth={1.4}
+                    className="text-[#5F7892]"
+                  />
+
+                  <p
+                    className="
+                      font-playfair
+                      text-lg
+                      text-[#435D76]
+                    "
+                  >
+                    {hora} hrs
+                  </p>
+                </div>
+
+                {/* =================================================
+                    DIRECCIÓN
+                ================================================== */}
+
+                <div
+                  className="
+                    relative
+                    mx-auto
+                    mt-5
+                    flex
+                    max-w-sm
+                    items-start
+                    justify-center
+                    gap-2
+                  "
+                >
+                  <MapPin
+                    size={17}
+                    strokeWidth={1.4}
+                    className="
+                      mt-1
+                      shrink-0
+                      text-[#5F7892]
+                    "
+                  />
+
+                  <p
+                    className="
+                      font-playfair
+                      text-sm
+                      leading-relaxed
+                      text-[#17191C]/60
+                      sm:text-[15px]
+                    "
+                  >
+                    {direccion}
+                  </p>
+                </div>
+
+                {/* =================================================
+                    BOTÓN
+                ================================================== */}
+
+                <motion.a
+                  href={ubicacion}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="
+                    relative
+                    mt-7
+                    inline-flex
+                    items-center
+                    justify-center
+                    gap-2
+                    rounded-md
+                    bg-[#5F7892]
+                    px-7
+                    py-3.5
+                    font-playfair
+                    text-[11px]
+                    uppercase
+                    tracking-[0.17em]
+                    text-white
+                    shadow-[0_10px_25px_rgba(67,93,118,0.25)]
+                    transition
+                    duration-300
+                    hover:bg-[#435D76]
+                    sm:text-xs
+                  "
+                  whileHover={{
+                    scale: 1.03,
+                  }}
+                  whileTap={{
+                    scale: 0.97,
+                  }}
+                >
+                  <MapPin
+                    size={16}
+                    strokeWidth={1.5}
+                  />
+
+                  Ver ubicación
+                </motion.a>
+              </motion.article>
+            )
+          )}
+        </div>
+
+        {/* =================================================
+            DETALLE INFERIOR
+        ================================================== */}
+
+        <div
+          className="
+            mx-auto
+            mt-12
+            flex
             items-center
             justify-center
             gap-3
-            rounded-full
-            bg-[#5D4E8C]
-            px-8
-            py-4
-            font-playfair
-            text-sm
-            uppercase
-            tracking-[0.15em]
-            text-white
-            shadow-[0_14px_35px_rgba(93,78,140,0.3)]
-            transition
-            duration-300
-            hover:bg-[#4B3E76]
-            sm:px-10
-            sm:text-base
+            text-[#5F7892]/40
           "
-          whileHover={{
-            scale: 1.05,
-            y: -3,
-          }}
-          whileTap={{
-            scale: 0.97,
-          }}
         >
-          <MapPin size={19} strokeWidth={1.6} />
-          Ver ubicación
-        </motion.a>
-      </motion.div>
+          <span className="h-px w-10 bg-[#5F7892]/20" />
+
+          <Sparkles
+            size={13}
+            strokeWidth={1.2}
+          />
+
+          <span className="h-px w-10 bg-[#5F7892]/20" />
+        </div>
+      </div>
     </section>
   );
 };

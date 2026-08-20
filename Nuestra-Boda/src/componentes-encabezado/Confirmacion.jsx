@@ -4,7 +4,6 @@ import {
   Check,
   Crown,
   Heart,
-  Loader2,
   MessageCircle,
   Send,
   Sparkles,
@@ -14,21 +13,61 @@ import {
 } from "lucide-react";
 
 const Confirmacion = () => {
+  /* =========================================================
+      NÚMERO DE WHATSAPP
+
+      FORMATO:
+      52 + número de 10 dígitos
+
+      EJEMPLO:
+      521234567890
+  ========================================================== */
+
+  const NUMERO_WHATSAPP = "5210000000000";
+
+  /* =========================================================
+      ESTADOS
+  ========================================================== */
+
   const [nombreInvitado, setNombreInvitado] = useState("");
   const [mensajeInvitado, setMensajeInvitado] = useState("");
   const [asistencia, setAsistencia] = useState("");
   const [invitados, setInvitados] = useState("");
   const [error, setError] = useState("");
-  const [enviando, setEnviando] = useState(false);
-  const [enviado, setEnviado] = useState(false);
 
-  const enviarConfirmacion = async () => {
-    if (!nombreInvitado.trim() || !asistencia) {
-      setError(
-        "Escribe tu nombre y selecciona si podrás asistir."
-      );
+  /* =========================================================
+      SELECCIONAR ASISTENCIA
+  ========================================================== */
+
+  const seleccionarAsistencia = (respuesta) => {
+    setAsistencia(respuesta);
+    setError("");
+
+    if (respuesta === "No podré asistir") {
+      setInvitados("");
+    }
+  };
+
+  /* =========================================================
+      ENVIAR A WHATSAPP
+  ========================================================== */
+
+  const enviarConfirmacion = () => {
+    /* VALIDACIÓN NOMBRE */
+
+    if (!nombreInvitado.trim()) {
+      setError("Por favor escribe tu nombre completo.");
       return;
     }
+
+    /* VALIDACIÓN ASISTENCIA */
+
+    if (!asistencia) {
+      setError("Selecciona si podrás asistir.");
+      return;
+    }
+
+    /* VALIDACIÓN INVITADOS */
 
     if (
       asistencia === "Sí asistiré" &&
@@ -39,61 +78,52 @@ const Confirmacion = () => {
     }
 
     setError("");
-    setEnviando(true);
-    setEnviado(false);
 
-    const data = {
-      nombre: nombreInvitado.trim(),
-      asistencia,
-      invitados:
-        asistencia === "Sí asistiré"
-          ? Number(invitados)
-          : 0,
-      mensaje: mensajeInvitado.trim(),
-    };
+    /* =======================================================
+        CREAR MENSAJE
+    ======================================================== */
 
-    try {
-      const respuesta = await fetch(
-        "https://script.google.com/macros/s/AKfycbxklU9PTlqxkcu9pBUfWYhByQZ_7kJWuFENeeQhlEW-C6eh2cVbTK3z2AbMJiWVL1ME/exec",
-        {
-          method: "POST",
-          body: JSON.stringify(data),
-        }
-      );
+    let mensaje = `Hola 👋
 
-      if (!respuesta.ok) {
-        throw new Error(
-          "La confirmación no pudo enviarse."
-        );
-      }
+Quiero confirmar mi asistencia a los XV años de Vanessa.
 
-      setEnviado(true);
-      setNombreInvitado("");
-      setMensajeInvitado("");
-      setAsistencia("");
-      setInvitados("");
+👤 Nombre:
+${nombreInvitado.trim()}
 
-      window.setTimeout(() => {
-        setEnviado(false);
-      }, 4500);
-    } catch (error) {
-      console.error("Error al enviar:", error);
+💙 Asistencia:
+${asistencia}`;
 
-      setError(
-        "Hubo un problema al enviar la confirmación. Intenta nuevamente."
-      );
-    } finally {
-      setEnviando(false);
+    /* SI ASISTE, AGREGAMOS NÚMERO DE INVITADOS */
+
+    if (asistencia === "Sí asistiré") {
+      mensaje += `
+
+👥 Número de asistentes:
+${invitados}`;
     }
-  };
 
-  const seleccionarAsistencia = (respuesta) => {
-    setAsistencia(respuesta);
-    setError("");
+    /* SI ESCRIBIÓ MENSAJE */
 
-    if (respuesta === "No podré asistir") {
-      setInvitados("");
+    if (mensajeInvitado.trim()) {
+      mensaje += `
+
+💌 Mensaje:
+${mensajeInvitado.trim()}`;
     }
+
+    mensaje += `
+
+¡Muchas gracias! ✨`;
+
+    /* =======================================================
+        ABRIR WHATSAPP
+    ======================================================== */
+
+    const urlWhatsApp = `https://wa.me/${NUMERO_WHATSAPP}?text=${encodeURIComponent(
+      mensaje
+    )}`;
+
+    window.open(urlWhatsApp, "_blank");
   };
 
   return (
@@ -105,19 +135,21 @@ const Confirmacion = () => {
         w-full
         overflow-hidden
         bg-gradient-to-b
-        from-[#5D4E8C]
-        via-[#6C5A9A]
-        to-[#C8B6E2]
+        from-[#435D76]
+        via-[#5F7892]
+        to-[#A9B9C8]
         px-5
         py-20
         sm:px-8
         sm:py-28
       "
     >
-      {/* LUCES DECORATIVAS */}
+      {/* =====================================================
+          LUCES DECORATIVAS
+      ====================================================== */}
+
       <div
         className="
-          confirmacionXV__luz-superior
           pointer-events-none
           absolute
           -left-32
@@ -132,7 +164,6 @@ const Confirmacion = () => {
 
       <div
         className="
-          confirmacionXV__luz-inferior
           pointer-events-none
           absolute
           -bottom-36
@@ -140,15 +171,17 @@ const Confirmacion = () => {
           h-[450px]
           w-[450px]
           rounded-full
-          bg-[#F5EBDD]/25
+          bg-[#E5E8EB]/30
           blur-[120px]
         "
       />
 
-      {/* CÍRCULOS DECORATIVOS */}
+      {/* =====================================================
+          CÍRCULOS DECORATIVOS
+      ====================================================== */}
+
       <div
         className="
-          confirmacionXV__circulo-superior
           pointer-events-none
           absolute
           right-[8%]
@@ -163,8 +196,8 @@ const Confirmacion = () => {
 
       <div
         className="
-          confirmacionXV__circulo-inferior
           pointer-events-none
+          absolute
           bottom-16
           left-[6%]
           h-48
@@ -175,15 +208,17 @@ const Confirmacion = () => {
         "
       />
 
-      {/* DESTELLOS */}
+      {/* =====================================================
+          DESTELLOS
+      ====================================================== */}
+
       <motion.div
         className="
-          confirmacionXV__destello-izquierdo
           pointer-events-none
           absolute
           left-[7%]
           top-24
-          text-[#F5EBDD]/80
+          text-white/75
         "
         animate={{
           opacity: [0.25, 1, 0.25],
@@ -196,17 +231,19 @@ const Confirmacion = () => {
           ease: "easeInOut",
         }}
       >
-        <Sparkles size={32} strokeWidth={1.2} />
+        <Sparkles
+          size={32}
+          strokeWidth={1.2}
+        />
       </motion.div>
 
       <motion.div
         className="
-          confirmacionXV__destello-derecho
           pointer-events-none
           absolute
           bottom-24
           right-[8%]
-          text-white/70
+          text-white/60
         "
         animate={{
           opacity: [0.2, 0.9, 0.2],
@@ -220,13 +257,18 @@ const Confirmacion = () => {
           delay: 0.5,
         }}
       >
-        <Sparkles size={40} strokeWidth={1.1} />
+        <Sparkles
+          size={40}
+          strokeWidth={1.1}
+        />
       </motion.div>
 
-      {/* TARJETA PRINCIPAL */}
+      {/* =====================================================
+          TARJETA PRINCIPAL
+      ====================================================== */}
+
       <motion.div
         className="
-          confirmacionXV__tarjeta
           relative
           z-10
           mx-auto
@@ -234,14 +276,14 @@ const Confirmacion = () => {
           overflow-hidden
           rounded-[2.5rem]
           border
-          border-white/65
+          border-white/70
           bg-gradient-to-b
           from-white/95
-          via-[#F5EBDD]/95
-          to-[#E8DFF2]/95
+          via-[#F8FAFC]/95
+          to-[#EEF2F5]/95
           px-5
           py-12
-          shadow-[0_35px_100px_rgba(37,28,66,0.35)]
+          shadow-[0_35px_100px_rgba(23,25,28,0.28)]
           backdrop-blur-xl
           sm:px-10
           sm:py-16
@@ -266,10 +308,12 @@ const Confirmacion = () => {
           amount: 0.2,
         }}
       >
-        {/* BRILLOS INTERNOS */}
+        {/* =================================================
+            BRILLOS INTERNOS
+        ================================================== */}
+
         <div
           className="
-            confirmacionXV__tarjeta-luz-superior
             pointer-events-none
             absolute
             -right-20
@@ -277,14 +321,13 @@ const Confirmacion = () => {
             h-64
             w-64
             rounded-full
-            bg-[#C8B6E2]/40
+            bg-[#A9B9C8]/30
             blur-3xl
           "
         />
 
         <div
           className="
-            confirmacionXV__tarjeta-luz-inferior
             pointer-events-none
             absolute
             -bottom-24
@@ -297,17 +340,14 @@ const Confirmacion = () => {
           "
         />
 
-        <div
-          className="
-            confirmacionXV__contenido
-            relative
-            z-10
-          "
-        >
-          {/* ENCABEZADO */}
+        <div className="relative z-10">
+
+          {/* =================================================
+              CORONA
+          ================================================== */}
+
           <motion.div
             className="
-              confirmacionXV__corona
               relative
               mx-auto
               flex
@@ -317,10 +357,10 @@ const Confirmacion = () => {
               justify-center
               rounded-full
               border
-              border-[#5D4E8C]/15
-              bg-white/75
-              text-[#5D4E8C]
-              shadow-[0_14px_35px_rgba(93,78,140,0.18)]
+              border-[#5F7892]/15
+              bg-white/80
+              text-[#5F7892]
+              shadow-[0_14px_35px_rgba(67,93,118,0.16)]
             "
             animate={{
               y: [0, -6, 0],
@@ -332,15 +372,17 @@ const Confirmacion = () => {
               ease: "easeInOut",
             }}
           >
-            <Crown size={36} strokeWidth={1.35} />
+            <Crown
+              size={36}
+              strokeWidth={1.35}
+            />
 
             <motion.span
               className="
-                confirmacionXV__corona-destello
                 absolute
                 -right-1
                 top-0
-                text-[#5D4E8C]
+                text-[#5F7892]
               "
               animate={{
                 opacity: [0, 1, 0],
@@ -355,9 +397,12 @@ const Confirmacion = () => {
             </motion.span>
           </motion.div>
 
+          {/* =================================================
+              ENCABEZADO
+          ================================================== */}
+
           <div
             className="
-              confirmacionXV__encabezado
               mx-auto
               max-w-2xl
               text-center
@@ -365,14 +410,13 @@ const Confirmacion = () => {
           >
             <p
               className="
-                confirmacionXV__etiqueta
                 mt-7
                 font-playfair
                 text-xs
                 font-semibold
                 uppercase
                 tracking-[0.4em]
-                text-[#5D4E8C]/65
+                text-[#5F7892]/70
                 sm:text-sm
               "
             >
@@ -381,12 +425,11 @@ const Confirmacion = () => {
 
             <h2
               className="
-                confirmacionXV__titulo
                 mt-4
                 font-cursiveDancing
                 text-5xl
                 leading-none
-                text-[#5D4E8C]
+                text-[#5F7892]
                 sm:text-6xl
                 md:text-7xl
               "
@@ -394,9 +437,10 @@ const Confirmacion = () => {
               Confirma tu asistencia
             </h2>
 
+            {/* SEPARADOR */}
+
             <div
               className="
-                confirmacionXV__separador
                 mx-auto
                 my-8
                 flex
@@ -407,12 +451,11 @@ const Confirmacion = () => {
             >
               <span
                 className="
-                  confirmacionXV__linea-izquierda
                   h-px
                   w-14
                   bg-gradient-to-r
                   from-transparent
-                  to-[#5D4E8C]/40
+                  to-[#5F7892]/40
                   sm:w-24
                 "
               />
@@ -420,17 +463,16 @@ const Confirmacion = () => {
               <Heart
                 size={18}
                 strokeWidth={1.4}
-                className="text-[#5D4E8C]"
+                className="text-[#5F7892]"
               />
 
               <span
                 className="
-                  confirmacionXV__linea-derecha
                   h-px
                   w-14
                   bg-gradient-to-l
                   from-transparent
-                  to-[#5D4E8C]/40
+                  to-[#5F7892]/40
                   sm:w-24
                 "
               />
@@ -438,13 +480,12 @@ const Confirmacion = () => {
 
             <p
               className="
-                confirmacionXV__descripcion
                 mx-auto
                 max-w-2xl
                 font-playfair
                 text-base
                 leading-8
-                text-[#2E2E2E]/70
+                text-[#17191C]/70
                 sm:text-lg
               "
             >
@@ -454,34 +495,38 @@ const Confirmacion = () => {
             </p>
           </div>
 
-          {/* FORMULARIO */}
+          {/* =================================================
+              FORMULARIO
+          ================================================== */}
+
           <div
             className="
-              confirmacionXV__formulario
               mx-auto
               mt-10
               max-w-2xl
               space-y-5
             "
           >
-            {/* NOMBRE */}
-            <div className="confirmacionXV__campo">
+            {/* =================================================
+                NOMBRE
+            ================================================== */}
+
+            <div>
               <label
                 htmlFor="nombreInvitado"
                 className="
-                  confirmacionXV__label
                   mb-2
                   block
                   font-playfair
                   text-sm
                   font-semibold
-                  text-[#5D4E8C]
+                  text-[#435D76]
                 "
               >
                 Nombre completo
               </label>
 
-              <div className="confirmacionXV__input-contenedor relative">
+              <div className="relative">
                 <UserRound
                   size={20}
                   strokeWidth={1.5}
@@ -491,7 +536,7 @@ const Confirmacion = () => {
                     left-5
                     top-1/2
                     -translate-y-1/2
-                    text-[#5D4E8C]/55
+                    text-[#5F7892]/55
                   "
                 />
 
@@ -504,43 +549,41 @@ const Confirmacion = () => {
                     setNombreInvitado(event.target.value);
                     setError("");
                   }}
-                  disabled={enviando}
                   className="
-                    confirmacionXV__input
                     w-full
                     rounded-2xl
                     border
-                    border-[#C8B6E2]/60
-                    bg-white/80
+                    border-[#A9B9C8]/60
+                    bg-white/85
                     py-4
                     pl-14
                     pr-5
                     font-playfair
-                    text-[#2E2E2E]
+                    text-[#17191C]
                     outline-none
                     transition
                     duration-300
-                    placeholder:text-[#2E2E2E]/35
-                    focus:border-[#5D4E8C]/55
+                    placeholder:text-[#17191C]/35
+                    focus:border-[#5F7892]/65
                     focus:ring-4
-                    focus:ring-[#C8B6E2]/25
-                    disabled:cursor-not-allowed
-                    disabled:opacity-60
+                    focus:ring-[#A9B9C8]/20
                   "
                 />
               </div>
             </div>
 
-            {/* ASISTENCIA */}
-            <fieldset className="confirmacionXV__asistencia">
+            {/* =================================================
+                ASISTENCIA
+            ================================================== */}
+
+            <fieldset>
               <legend
                 className="
-                  confirmacionXV__label
                   mb-3
                   font-playfair
                   text-sm
                   font-semibold
-                  text-[#5D4E8C]
+                  text-[#435D76]
                 "
               >
                 ¿Podrás acompañarme?
@@ -548,21 +591,20 @@ const Confirmacion = () => {
 
               <div
                 className="
-                  confirmacionXV__opciones
                   grid
                   grid-cols-1
                   gap-4
                   sm:grid-cols-2
                 "
               >
+                {/* SÍ */}
+
                 <motion.button
                   type="button"
                   onClick={() =>
                     seleccionarAsistencia("Sí asistiré")
                   }
-                  disabled={enviando}
                   className={`
-                    confirmacionXV__opcion-si
                     flex
                     min-h-[76px]
                     items-center
@@ -575,44 +617,36 @@ const Confirmacion = () => {
                     font-playfair
                     transition
                     duration-300
-                    disabled:cursor-not-allowed
-                    disabled:opacity-60
                     ${
                       asistencia === "Sí asistiré"
-                        ? "border-[#5D4E8C] bg-[#5D4E8C] text-white shadow-[0_12px_30px_rgba(93,78,140,0.25)]"
-                        : "border-[#C8B6E2]/60 bg-white/75 text-[#5D4E8C] hover:bg-white"
+                        ? "border-[#5F7892] bg-[#5F7892] text-white shadow-[0_12px_30px_rgba(67,93,118,0.25)]"
+                        : "border-[#A9B9C8]/60 bg-white/80 text-[#435D76] hover:bg-white"
                     }
                   `}
-                  whileHover={
-                    enviando
-                      ? {}
-                      : {
-                          y: -3,
-                          scale: 1.01,
-                        }
-                  }
-                  whileTap={
-                    enviando
-                      ? {}
-                      : {
-                          scale: 0.97,
-                        }
-                  }
+                  whileHover={{
+                    y: -3,
+                    scale: 1.01,
+                  }}
+                  whileTap={{
+                    scale: 0.97,
+                  }}
                 >
-                  <Check size={20} strokeWidth={2} />
+                  <Check
+                    size={20}
+                    strokeWidth={2}
+                  />
+
                   Sí asistiré
                 </motion.button>
+
+                {/* NO */}
 
                 <motion.button
                   type="button"
                   onClick={() =>
-                    seleccionarAsistencia(
-                      "No podré asistir"
-                    )
+                    seleccionarAsistencia("No podré asistir")
                   }
-                  disabled={enviando}
                   className={`
-                    confirmacionXV__opcion-no
                     flex
                     min-h-[76px]
                     items-center
@@ -625,41 +659,37 @@ const Confirmacion = () => {
                     font-playfair
                     transition
                     duration-300
-                    disabled:cursor-not-allowed
-                    disabled:opacity-60
                     ${
                       asistencia === "No podré asistir"
-                        ? "border-[#5D4E8C] bg-[#5D4E8C] text-white shadow-[0_12px_30px_rgba(93,78,140,0.25)]"
-                        : "border-[#C8B6E2]/60 bg-white/75 text-[#5D4E8C] hover:bg-white"
+                        ? "border-[#5F7892] bg-[#5F7892] text-white shadow-[0_12px_30px_rgba(67,93,118,0.25)]"
+                        : "border-[#A9B9C8]/60 bg-white/80 text-[#435D76] hover:bg-white"
                     }
                   `}
-                  whileHover={
-                    enviando
-                      ? {}
-                      : {
-                          y: -3,
-                          scale: 1.01,
-                        }
-                  }
-                  whileTap={
-                    enviando
-                      ? {}
-                      : {
-                          scale: 0.97,
-                        }
-                  }
+                  whileHover={{
+                    y: -3,
+                    scale: 1.01,
+                  }}
+                  whileTap={{
+                    scale: 0.97,
+                  }}
                 >
-                  <X size={20} strokeWidth={2} />
+                  <X
+                    size={20}
+                    strokeWidth={2}
+                  />
+
                   No podré asistir
                 </motion.button>
               </div>
             </fieldset>
 
-            {/* NÚMERO DE INVITADOS */}
+            {/* =================================================
+                NÚMERO DE INVITADOS
+            ================================================== */}
+
             <AnimatePresence>
               {asistencia === "Sí asistiré" && (
                 <motion.div
-                  className="confirmacionXV__campo-invitados"
                   initial={{
                     opacity: 0,
                     height: 0,
@@ -682,24 +712,18 @@ const Confirmacion = () => {
                   <label
                     htmlFor="numeroInvitados"
                     className="
-                      confirmacionXV__label
                       mb-2
                       block
                       font-playfair
                       text-sm
                       font-semibold
-                      text-[#5D4E8C]
+                      text-[#435D76]
                     "
                   >
-                    Número de invitados
+                    Número de asistentes
                   </label>
 
-                  <div
-                    className="
-                      confirmacionXV__input-contenedor
-                      relative
-                    "
-                  >
+                  <div className="relative">
                     <UsersRound
                       size={20}
                       strokeWidth={1.5}
@@ -709,7 +733,7 @@ const Confirmacion = () => {
                         left-5
                         top-1/2
                         -translate-y-1/2
-                        text-[#5D4E8C]/55
+                        text-[#5F7892]/55
                       "
                     />
 
@@ -724,28 +748,24 @@ const Confirmacion = () => {
                         setInvitados(event.target.value);
                         setError("");
                       }}
-                      disabled={enviando}
                       className="
-                        confirmacionXV__input
                         w-full
                         rounded-2xl
                         border
-                        border-[#C8B6E2]/60
-                        bg-white/80
+                        border-[#A9B9C8]/60
+                        bg-white/85
                         py-4
                         pl-14
                         pr-5
                         font-playfair
-                        text-[#2E2E2E]
+                        text-[#17191C]
                         outline-none
                         transition
                         duration-300
-                        placeholder:text-[#2E2E2E]/35
-                        focus:border-[#5D4E8C]/55
+                        placeholder:text-[#17191C]/35
+                        focus:border-[#5F7892]/65
                         focus:ring-4
-                        focus:ring-[#C8B6E2]/25
-                        disabled:cursor-not-allowed
-                        disabled:opacity-60
+                        focus:ring-[#A9B9C8]/20
                       "
                     />
                   </div>
@@ -753,29 +773,26 @@ const Confirmacion = () => {
               )}
             </AnimatePresence>
 
-            {/* MENSAJE */}
-            <div className="confirmacionXV__campo">
+            {/* =================================================
+                MENSAJE
+            ================================================== */}
+
+            <div>
               <label
                 htmlFor="mensajeInvitado"
                 className="
-                  confirmacionXV__label
                   mb-2
                   block
                   font-playfair
                   text-sm
                   font-semibold
-                  text-[#5D4E8C]
+                  text-[#435D76]
                 "
               >
                 Mensaje para la quinceañera
               </label>
 
-              <div
-                className="
-                  confirmacionXV__textarea-contenedor
-                  relative
-                "
-              >
+              <div className="relative">
                 <MessageCircle
                   size={20}
                   strokeWidth={1.5}
@@ -784,7 +801,7 @@ const Confirmacion = () => {
                     absolute
                     left-5
                     top-5
-                    text-[#5D4E8C]/55
+                    text-[#5F7892]/55
                   "
                 />
 
@@ -796,54 +813,52 @@ const Confirmacion = () => {
                     setMensajeInvitado(event.target.value)
                   }
                   rows={4}
-                  disabled={enviando}
                   className="
-                    confirmacionXV__textarea
                     w-full
                     resize-none
                     rounded-2xl
                     border
-                    border-[#C8B6E2]/60
-                    bg-white/80
+                    border-[#A9B9C8]/60
+                    bg-white/85
                     py-4
                     pl-14
                     pr-5
                     font-playfair
                     leading-7
-                    text-[#2E2E2E]
+                    text-[#17191C]
                     outline-none
                     transition
                     duration-300
-                    placeholder:text-[#2E2E2E]/35
-                    focus:border-[#5D4E8C]/55
+                    placeholder:text-[#17191C]/35
+                    focus:border-[#5F7892]/65
                     focus:ring-4
-                    focus:ring-[#C8B6E2]/25
-                    disabled:cursor-not-allowed
-                    disabled:opacity-60
+                    focus:ring-[#A9B9C8]/20
                   "
                 />
               </div>
             </div>
 
-            {/* MENSAJE DE ERROR */}
+            {/* =================================================
+                ERROR
+            ================================================== */}
+
             <AnimatePresence>
               {error && (
                 <motion.div
                   role="alert"
                   className="
-                    confirmacionXV__error
                     flex
                     items-start
                     gap-3
                     rounded-2xl
                     border
-                    border-[#9F5470]/25
-                    bg-[#9F5470]/10
+                    border-red-400/25
+                    bg-red-50
                     px-4
                     py-4
                     text-sm
                     leading-6
-                    text-[#783C54]
+                    text-red-700
                   "
                   initial={{
                     opacity: 0,
@@ -869,70 +884,21 @@ const Confirmacion = () => {
               )}
             </AnimatePresence>
 
-            {/* MENSAJE DE ÉXITO */}
-            <AnimatePresence>
-              {enviado && (
-                <motion.div
-                  role="status"
-                  className="
-                    confirmacionXV__exito
-                    flex
-                    items-start
-                    gap-3
-                    rounded-2xl
-                    border
-                    border-[#5D4E8C]/20
-                    bg-[#C8B6E2]/25
-                    px-4
-                    py-4
-                    text-sm
-                    leading-6
-                    text-[#4B3E76]
-                  "
-                  initial={{
-                    opacity: 0,
-                    y: -8,
-                    scale: 0.98,
-                  }}
-                  animate={{
-                    opacity: 1,
-                    y: 0,
-                    scale: 1,
-                  }}
-                  exit={{
-                    opacity: 0,
-                    y: -8,
-                    scale: 0.98,
-                  }}
-                >
-                  <Check
-                    size={20}
-                    strokeWidth={2}
-                    className="mt-0.5 shrink-0"
-                  />
+            {/* =================================================
+                BOTÓN WHATSAPP
+            ================================================== */}
 
-                  <span>
-                    Tu confirmación fue enviada correctamente.
-                    ¡Gracias!
-                  </span>
-                </motion.div>
-              )}
-            </AnimatePresence>
-
-            {/* BOTÓN ENVIAR */}
             <motion.button
               type="button"
               onClick={enviarConfirmacion}
-              disabled={enviando}
               className="
-                confirmacionXV__boton-enviar
                 flex
                 w-full
                 items-center
                 justify-center
                 gap-3
                 rounded-full
-                bg-[#5D4E8C]
+                bg-[#5F7892]
                 px-6
                 py-4
                 font-playfair
@@ -941,58 +907,47 @@ const Confirmacion = () => {
                 uppercase
                 tracking-[0.12em]
                 text-white
-                shadow-[0_16px_40px_rgba(93,78,140,0.32)]
+                shadow-[0_16px_40px_rgba(67,93,118,0.30)]
                 transition
                 duration-300
-                hover:bg-[#4B3E76]
-                disabled:cursor-not-allowed
-                disabled:opacity-65
+                hover:bg-[#435D76]
                 sm:text-lg
               "
-              whileHover={
-                enviando
-                  ? {}
-                  : {
-                      scale: 1.02,
-                      y: -2,
-                    }
-              }
-              whileTap={
-                enviando
-                  ? {}
-                  : {
-                      scale: 0.98,
-                    }
-              }
+              whileHover={{
+                scale: 1.02,
+                y: -2,
+              }}
+              whileTap={{
+                scale: 0.98,
+              }}
             >
-              {enviando ? (
-                <>
-                  <Loader2
-                    size={21}
-                    className="animate-spin"
-                  />
-                  Enviando...
-                </>
-              ) : (
-                <>
-                  <Send size={20} strokeWidth={1.7} />
-                  Enviar confirmación
-                </>
-              )}
+              <MessageCircle
+                size={21}
+                strokeWidth={1.7}
+              />
+
+              Enviar por WhatsApp
+
+              <Send
+                size={18}
+                strokeWidth={1.7}
+              />
             </motion.button>
           </div>
 
-          {/* MENSAJE FINAL */}
+          {/* =================================================
+              MENSAJE FINAL
+          ================================================== */}
+
           <p
             className="
-              confirmacionXV__mensaje-final
               mx-auto
               mt-8
               max-w-xl
               text-center
               font-cursiveDancing
               text-3xl
-              text-[#5D4E8C]
+              text-[#5F7892]
               sm:text-4xl
             "
           >

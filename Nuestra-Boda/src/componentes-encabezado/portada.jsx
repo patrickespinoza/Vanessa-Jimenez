@@ -1,118 +1,322 @@
 import React from "react";
+import { Crown, Sparkles } from "lucide-react";
 
 export default function Portada() {
   return (
-    <section className="relative portadaXV w-full h-screen overflow-hidden">
+    <section
+      className="
+        portadaXV
+        relative
+        h-screen
+        min-h-[650px]
+        w-full
+        overflow-hidden
+        bg-[#435D76]
+      "
+    >
+      {/* =====================================================
+          IMAGEN RESPONSIVE
+          MOBILE: /Portada-mobile.png
+          DESKTOP: /Portada-desktop.png
+      ====================================================== */}
+      <picture className="absolute inset-0 h-full w-full ">
+        {/* COMPUTADORA / TABLET GRANDE */}
+        <source
+          media="(min-width: 768px)"
+          srcSet="/Portada.png"
+        />
 
-      {/* Imagen */}
-      <img
-        src="/Portada-02.png"
-        alt="Allison"
+        {/* CELULAR */}
+        <img
+          src="/portadacel.png"
+          alt="Vanessa Jimenez Diaz"
+          className="
+            portadaXV__imagen
+            h-full
+            w-full
+            object-cover
+            object-center
+          "
+        />
+      </picture>
+
+      {/* =====================================================
+          CAPA SUAVE SOBRE TODA LA IMAGEN
+      ====================================================== */}
+      <div
         className="
-          portadaXV__imagen
+          pointer-events-none
           absolute
           inset-0
-          w-full
-          h-full
-          object-cover
-          object-[center_20%]
+          bg-[#17212B]/5
         "
       />
 
-
-      {/* Destellos */}
-      <div className="portadaXV__decoracion absolute top-8 left-8 w-28 h-28 rounded-full bg-white/10 blur-3xl" />
-      <div className="portadaXV__decoracion absolute bottom-20 right-6 w-36 h-36 rounded-full bg-[#C8B6E2]/30 blur-3xl" />
-
-      {/* Contenido */}
+      {/* =====================================================
+          DEGRADADO INFERIOR PARA EL TEXTO
+      ====================================================== */}
       <div
         className="
-          portadaXV__contenido
-          relative
-          z-10
-          h-full
-          flex
-          flex-col
-          justify-end
-          items-center
-          text-center
-          px-6
-          pb-24
+          pointer-events-none
+          absolute
+          inset-x-0
+          bottom-0
+          h-[64%]
+          bg-gradient-to-t
+          from-[#10171E]/90
+          via-[#243342]/45
+          to-transparent
+        "
+      />
+
+      {/* =====================================================
+          DEGRADADO LATERAL
+      ====================================================== */}
+      <div
+        className="
+          pointer-events-none
+          absolute
+          inset-0
+          bg-gradient-to-r
+          from-[#17212B]/10
+          via-transparent
+          to-[#17212B]/10
+        "
+      />
+
+      {/* =====================================================
+          DESTELLOS
+      ====================================================== */}
+      <div
+        className="
+          absolute
+          left-[7%]
+          top-[10%]
+          text-white/65
         "
       >
+        <Sparkles
+          size={24}
+          strokeWidth={1.2}
+        />
+      </div>
 
+      <div
+        className="
+          absolute
+          right-[8%]
+          top-[20%]
+          text-[#E5E8EB]/60
+        "
+      >
+        <Sparkles
+          size={19}
+          strokeWidth={1.2}
+        />
+      </div>
+
+      {/* =====================================================
+          CONTENIDO
+      ====================================================== */}
+      <div
+        className="
+          relative
+          z-10
+          flex
+          h-full
+          flex-col
+          items-center
+          justify-end
+          px-5
+          pb-16
+          text-center
+
+          sm:px-6
+          sm:pb-20
+
+          md:pb-24
+        "
+      >
+        {/* CORONA */}
+        <div
+          className="
+            mb-4
+            flex
+            h-12
+            w-12
+            items-center
+            justify-center
+            rounded-full
+            border
+            border-white/35
+            bg-[#17212B]/20
+            text-[#E5E8EB]
+            shadow-[0_6px_20px_rgba(0,0,0,0.18)]
+            backdrop-blur-[3px]
+          "
+        >
+          <Crown
+            size={25}
+            strokeWidth={1.2}
+          />
+        </div>
+
+        {/* MIS XV AÑOS */}
         <p
           className="
-            portadaXV__subtitulo
-            uppercase
-            tracking-[0.45em]
-            text-[#F5EBDD]
-            text-sm
-            sm:text-base
+            mb-4
             font-playfair
-            mb-6
+            text-[11px]
+            uppercase
+            tracking-[0.48em]
+            text-[#F4F6F8]
+            drop-shadow-[0_2px_5px_rgba(0,0,0,0.75)]
+
+            sm:text-sm
           "
         >
           Mis XV Años
         </p>
 
-        <h1
+        {/* =================================================
+            NOMBRE
+        ================================================== */}
+        <div
           className="
-            portadaXV__titulo
-            font-cursiveDancing
-            text-white
-            text-6xl
-            sm:text-7xl
-            md:text-8xl
-            lg:text-[7rem]
-            leading-none
-            drop-shadow-2xl
+            relative
+            flex
+            w-full
+            max-w-[800px]
+            items-center
+            justify-center
           "
         >
-          Allison
-        </h1>
+          {/* SOMBRA DIFUMINADA DETRÁS */}
+          <div
+            className="
+              pointer-events-none
+              absolute
+              left-1/2
+              top-1/2
+              h-[120%]
+              w-[110%]
+              -translate-x-1/2
+              -translate-y-1/2
+              rounded-full
+              bg-[#10171E]/30
+              blur-[28px]
+            "
+          />
 
+          <h1
+            className="
+              relative
+              font-cursiveDancing
+              text-[3.4rem]
+              leading-[0.95]
+              text-white
+              drop-shadow-[0_4px_9px_rgba(0,0,0,0.95)]
+
+              sm:text-7xl
+              md:text-8xl
+              lg:text-[7rem]
+            "
+          >
+            Vanessa Jimenez Diaz
+          </h1>
+        </div>
+
+        {/* =================================================
+            SEPARADOR
+        ================================================== */}
         <div
           className="
-            portadaXV__linea
-            w-28
-            h-[2px]
-            my-8
-            rounded-full
-            bg-gradient-to-r
-            from-transparent
-            via-[#F5EBDD]
-            to-transparent
+            my-6
+            flex
+            items-center
+            justify-center
+            gap-3
           "
-        />
+        >
+          <span
+            className="
+              h-px
+              w-14
+              bg-gradient-to-r
+              from-transparent
+              to-[#E5E8EB]/80
+            "
+          />
 
+          <Sparkles
+            size={14}
+            strokeWidth={1.2}
+            className="text-[#E5E8EB]"
+          />
+
+          <span
+            className="
+              h-px
+              w-14
+              bg-gradient-to-l
+              from-transparent
+              to-[#E5E8EB]/80
+            "
+          />
+        </div>
+
+        {/* =================================================
+            FECHA
+        ================================================== */}
         <div
           className="
-            portadaXV__fecha
-            px-8
-            py-4
             rounded-full
-            bg-[#F5EBDD]/90
-            backdrop-blur-md
             border
-            border-[#C8B6E2]
-            shadow-xl
+            border-white/40
+            bg-white/90
+            px-6
+            py-3.5
+            shadow-[0_12px_35px_rgba(0,0,0,0.25)]
+            backdrop-blur-xl
+
+            sm:px-8
+            sm:py-4
           "
         >
           <p
             className="
               font-playfair
-              text-[#5D4E8C]
-              text-lg
-              sm:text-xl
-              tracking-[0.18em]
+              text-sm
               uppercase
+              tracking-[0.15em]
+              text-[#435D76]
+
+              sm:text-lg
+              sm:tracking-[0.18em]
             "
           >
-            11 · Junio · 2027
+            12 · Septiembre · 2026
           </p>
         </div>
 
+        {/* DETALLE FINAL */}
+        <div
+          className="
+            mt-6
+            flex
+            items-center
+            gap-2
+            text-white/60
+          "
+        >
+          <span className="h-px w-6 bg-white/30" />
+
+          <span className="text-[8px]">
+            ◆
+          </span>
+
+          <span className="h-px w-6 bg-white/30" />
+        </div>
       </div>
     </section>
   );
