@@ -17,6 +17,11 @@ export default function MusicaXV() {
   const [reproduciendo, setReproduciendo] = useState(false);
   const [silenciado, setSilenciado] = useState(false);
   const [audioListo, setAudioListo] = useState(false);
+  const [cargandoAudio, setCargandoAudio] = useState(false);
+
+  /* =========================================================
+      PREPARAR AUDIO
+  ========================================================== */
 
   useEffect(() => {
     const audio = audioRef.current;
@@ -24,6 +29,12 @@ export default function MusicaXV() {
     if (!audio) return;
 
     audio.volume = 0.45;
+
+    /*
+      Forzamos al navegador a comenzar a cargar
+      el archivo desde que entra a la página.
+    */
+    audio.load();
 
     const marcarAudioListo = () => {
       setAudioListo(true);
@@ -37,41 +48,121 @@ export default function MusicaXV() {
       setReproduciendo(true);
     };
 
+    const manejarError = () => {
+      console.error("No se pudo cargar /musica.mp3");
+      setAudioListo(false);
+    };
+
+    /*
+      Escuchamos varios eventos en vez de depender
+      únicamente de canplaythrough.
+    */
+    audio.addEventListener("loadedmetadata", marcarAudioListo);
+    audio.addEventListener("loadeddata", marcarAudioListo);
+    audio.addEventListener("canplay", marcarAudioListo);
     audio.addEventListener("canplaythrough", marcarAudioListo);
+
     audio.addEventListener("play", marcarReproduccion);
     audio.addEventListener("pause", marcarPausa);
+    audio.addEventListener("error", manejarError);
 
-    if (audio.readyState >= 3) {
+    /*
+      Si el navegador ya cargó suficiente información
+      antes de registrar los eventos.
+    */
+    if (audio.readyState >= 1) {
       setAudioListo(true);
     }
 
     return () => {
-      audio.removeEventListener("canplaythrough", marcarAudioListo);
-      audio.removeEventListener("play", marcarReproduccion);
-      audio.removeEventListener("pause", marcarPausa);
+      audio.removeEventListener(
+        "loadedmetadata",
+        marcarAudioListo
+      );
+
+      audio.removeEventListener(
+        "loadeddata",
+        marcarAudioListo
+      );
+
+      audio.removeEventListener(
+        "canplay",
+        marcarAudioListo
+      );
+
+      audio.removeEventListener(
+        "canplaythrough",
+        marcarAudioListo
+      );
+
+      audio.removeEventListener(
+        "play",
+        marcarReproduccion
+      );
+
+      audio.removeEventListener(
+        "pause",
+        marcarPausa
+      );
+
+      audio.removeEventListener(
+        "error",
+        manejarError
+      );
     };
   }, []);
+
+  /* =========================================================
+      ENTRAR CON MÚSICA
+  ========================================================== */
 
   const iniciarConMusica = async () => {
     const audio = audioRef.current;
 
-    if (!audio) return;
+    if (!audio || cargandoAudio) return;
 
     try {
+      setCargandoAudio(true);
+
       audio.muted = false;
+      audio.volume = 0.45;
+
       setSilenciado(false);
 
+      /*
+        Aunque audioListo todavía sea false,
+        intentamos reproducirlo directamente.
+
+        Esto es importante en móviles porque play()
+        está ocurriendo exactamente después del click.
+      */
       await audio.play();
 
+      setAudioListo(true);
       setReproduciendo(true);
       setMostrarModal(false);
     } catch (error) {
-      console.error("No se pudo reproducir el audio:", error);
+      console.error(
+        "No se pudo reproducir el audio:",
+        error
+      );
+
+      /*
+        Si aún estaba cargando, hacemos load()
+        nuevamente, pero NO cerramos la ventana.
+        Así el usuario puede volver a tocar el botón.
+      */
+      audio.load();
 
       setReproduciendo(false);
-      setMostrarModal(false);
+    } finally {
+      setCargandoAudio(false);
     }
   };
+
+  /* =========================================================
+      CONTINUAR SIN MÚSICA
+  ========================================================== */
 
   const continuarSinMusica = () => {
     const audio = audioRef.current;
@@ -84,6 +175,10 @@ export default function MusicaXV() {
     setMostrarModal(false);
   };
 
+  /* =========================================================
+      PLAY / PAUSA
+  ========================================================== */
+
   const alternarReproduccion = async () => {
     const audio = audioRef.current;
 
@@ -91,16 +186,27 @@ export default function MusicaXV() {
 
     try {
       if (audio.paused) {
+        audio.muted = false;
+
         await audio.play();
+
+        setSilenciado(false);
         setReproduciendo(true);
       } else {
         audio.pause();
         setReproduciendo(false);
       }
     } catch (error) {
-      console.error("No se pudo cambiar la reproducción:", error);
+      console.error(
+        "No se pudo cambiar la reproducción:",
+        error
+      );
     }
   };
+
+  /* =========================================================
+      SILENCIAR
+  ========================================================== */
 
   const alternarSilencio = () => {
     const audio = audioRef.current;
@@ -110,6 +216,7 @@ export default function MusicaXV() {
     const nuevoEstado = !audio.muted;
 
     audio.muted = nuevoEstado;
+
     setSilenciado(nuevoEstado);
   };
 
@@ -118,16 +225,19 @@ export default function MusicaXV() {
       {/* =====================================================
           AUDIO PRINCIPAL
       ====================================================== */}
+
       <audio
         ref={audioRef}
         src="/musica.mp3"
         preload="auto"
         loop
+        playsInline
       />
 
       {/* =====================================================
           VENTANA INICIAL
       ====================================================== */}
+
       <AnimatePresence>
         {mostrarModal && (
           <motion.div
@@ -143,13 +253,21 @@ export default function MusicaXV() {
               px-5
               backdrop-blur-md
             "
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.5 }}
+            initial={{
+              opacity: 0,
+            }}
+            animate={{
+              opacity: 1,
+            }}
+            exit={{
+              opacity: 0,
+            }}
+            transition={{
+              duration: 0.5,
+            }}
           >
             {/* =================================================
-                LUCES DEL FONDO
+                LUZ IZQUIERDA
             ================================================== */}
 
             <motion.div
@@ -174,6 +292,10 @@ export default function MusicaXV() {
                 ease: "easeInOut",
               }}
             />
+
+            {/* =================================================
+                LUZ DERECHA
+            ================================================== */}
 
             <motion.div
               className="
@@ -220,7 +342,10 @@ export default function MusicaXV() {
                 ease: "easeInOut",
               }}
             >
-              <Sparkles size={28} strokeWidth={1.2} />
+              <Sparkles
+                size={28}
+                strokeWidth={1.2}
+              />
             </motion.div>
 
             <motion.div
@@ -241,7 +366,10 @@ export default function MusicaXV() {
                 ease: "easeInOut",
               }}
             >
-              <Sparkles size={36} strokeWidth={1.2} />
+              <Sparkles
+                size={36}
+                strokeWidth={1.2}
+              />
             </motion.div>
 
             {/* =================================================
@@ -288,9 +416,7 @@ export default function MusicaXV() {
                 ease: [0.22, 1, 0.36, 1],
               }}
             >
-              {/* =================================================
-                  DECORACIÓN SUPERIOR AZUL
-              ================================================== */}
+              {/* LÍNEA SUPERIOR */}
 
               <div
                 className="
@@ -371,8 +497,6 @@ export default function MusicaXV() {
                   ease: "easeInOut",
                 }}
               >
-                {/* CÍRCULO INTERIOR */}
-
                 <div
                   className="
                     absolute
@@ -533,12 +657,14 @@ export default function MusicaXV() {
                   gap-3
                 "
               >
-                {/* ENTRAR CON MÚSICA */}
+                {/* =================================================
+                    ENTRAR CON MÚSICA
+                ================================================== */}
 
                 <motion.button
                   type="button"
                   onClick={iniciarConMusica}
-                  disabled={!audioListo}
+                  disabled={cargandoAudio}
                   className="
                     group
                     relative
@@ -564,14 +690,26 @@ export default function MusicaXV() {
                     transition
                     duration-300
                     hover:shadow-[0_16px_40px_rgba(67,93,118,0.42)]
-                    disabled:cursor-not-allowed
-                    disabled:opacity-60
+                    disabled:cursor-wait
+                    disabled:opacity-70
                     sm:text-[15px]
                   "
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.97 }}
+                  whileHover={
+                    cargandoAudio
+                      ? {}
+                      : {
+                          scale: 1.02,
+                        }
+                  }
+                  whileTap={
+                    cargandoAudio
+                      ? {}
+                      : {
+                          scale: 0.97,
+                        }
+                  }
                 >
-                  {/* BRILLO DEL BOTÓN */}
+                  {/* BRILLO */}
 
                   <motion.span
                     className="
@@ -602,13 +740,33 @@ export default function MusicaXV() {
                   />
 
                   <span className="relative z-10">
-                    {audioListo
-                      ? "Entrar con música"
-                      : "Preparando música..."}
+                    {cargandoAudio
+                      ? "Iniciando música..."
+                      : "Entrar con música"}
                   </span>
                 </motion.button>
 
-                {/* CONTINUAR SIN MÚSICA */}
+                {/* =================================================
+                    ESTADO DEL AUDIO
+                ================================================== */}
+
+                <p
+                  className="
+                    font-playfair
+                    text-[10px]
+                    uppercase
+                    tracking-[0.18em]
+                    text-[#435D76]/50
+                  "
+                >
+                  {audioListo
+                    ? "Música lista"
+                    : "Toca para iniciar la música"}
+                </p>
+
+                {/* =================================================
+                    CONTINUAR SIN MÚSICA
+                ================================================== */}
 
                 <motion.button
                   type="button"
@@ -637,8 +795,12 @@ export default function MusicaXV() {
                     hover:border-[#5F7892]/40
                     hover:bg-white
                   "
-                  whileHover={{ scale: 1.015 }}
-                  whileTap={{ scale: 0.98 }}
+                  whileHover={{
+                    scale: 1.015,
+                  }}
+                  whileTap={{
+                    scale: 0.98,
+                  }}
                 >
                   <VolumeX size={18} />
 
@@ -647,7 +809,7 @@ export default function MusicaXV() {
               </div>
 
               {/* =================================================
-                  DETALLE INFERIOR
+                  DETALLE
               ================================================== */}
 
               <div
@@ -740,8 +902,12 @@ export default function MusicaXV() {
                 shadow-[0_8px_25px_rgba(23,25,28,0.16)]
                 backdrop-blur-md
               "
-              whileHover={{ scale: 1.08 }}
-              whileTap={{ scale: 0.92 }}
+              whileHover={{
+                scale: 1.08,
+              }}
+              whileTap={{
+                scale: 0.92,
+              }}
             >
               {silenciado ? (
                 <VolumeX size={19} />
@@ -779,8 +945,12 @@ export default function MusicaXV() {
                 text-white
                 shadow-[0_12px_30px_rgba(67,93,118,0.4)]
               "
-              whileHover={{ scale: 1.08 }}
-              whileTap={{ scale: 0.92 }}
+              whileHover={{
+                scale: 1.08,
+              }}
+              whileTap={{
+                scale: 0.92,
+              }}
             >
               {/* PULSO */}
 
