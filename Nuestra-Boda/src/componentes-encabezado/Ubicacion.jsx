@@ -20,9 +20,8 @@ const Celebracion = ({
   },
 
   salon = {
-    nombre: "Salón Social",
+    nombre: "Salón Social Luz de Luna",
     hora: "17:00",
-    direccion: "Av. San Pedro 14, Sta María Xonacatepec, 72940 Santa María Xonacatepec, Pue.",
     ubicacion: "https://maps.app.goo.gl/Q2Qk3nVEXaYELHY36",
   },
 }) => {
