@@ -13,9 +13,9 @@ const Celebracion = ({
   fecha = "12 Septiembre 2026",
 
   parroquia = {
-    nombre: "Parroquia de Santa María de La Natividad",
+    nombre: "Parroquia nuestra señora de La Natividad",
     hora: "15:00",
-    direccion: "Miguel Alemán 1, Sta María Xonacatepec, 72940 Santa María Xonacatepec, Pue.",
+    direccion: "Miguel Alemán 1, 72940 Santa María Xonacatepec, Pue.",
     ubicacion: "https://maps.app.goo.gl/9cs5Ax1B6w1b46Db8",
   },
 
